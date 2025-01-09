@@ -29,7 +29,7 @@ const Login = () => {
 	            localStorage.setItem('token',respuesta.data.token)
 	            setAuth(respuesta.data)
 	            navigate('/dashboard')
-                toast.success(respuesta.data.msg)
+                toast.success(response.data.msg)
 	        } catch (error) {
 	            toast.error(error.response.data.msg)
 	        }
