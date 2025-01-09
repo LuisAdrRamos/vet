@@ -15,6 +15,7 @@ import Perfil from './paginas/Perfil'
 import { Confirmar } from './paginas/Confirmar'
 import Restablecer from './paginas/Restablecer'
 import { AuthProvider } from './context/AuthProvider'
+import { PrivateRoute } from './routes/PrivateRoute'
 
 
 
@@ -22,7 +23,7 @@ function App() {
   return (
     <>
     <BrowserRouter>
-    
+
       <AuthProvider>
 
         <Routes>
@@ -38,12 +39,18 @@ function App() {
             <Route path='*' element={<NotFound />} />
           </Route>
 
-          <Route path='/dashboard' element={<Dashboard/>}>
-            <Route index element={<Perfil/>}/>
-            <Route path='listar' element={<Listar/>}/>
-            <Route path='visualizar/:id' element={<Visualizar/>}/>
-            <Route path='crear' element={<Crear/>}/>
-            <Route path='actualizar/:id' element={<Actualizar/>}/>
+          <Route path='dashboard/*' element={
+            <PrivateRoute>
+              <Routes>
+                <Route element={<Dashboard/>}>
+                  <Route index element={<Perfil/>}/>
+                  <Route path='listar' element={<Listar/>}/>
+                  <Route path='visualizar/:id' element={<Visualizar/>}/>
+                  <Route path='crear' element={<Crear/>}/>
+                  <Route path='actualizar/:id' element={<Actualizar/>}/>
+                </Route>
+              </Routes>
+            </PrivateRoute>}>
           </Route>
 
         </Routes>
