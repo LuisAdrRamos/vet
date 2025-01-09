@@ -1,26 +1,38 @@
-import { useState } from 'react'
 import {Link} from 'react-router-dom'
+import { useState } from 'react'
+import Mensaje from '../componets/Alertas/Mensaje'
 import axios from 'axios'
 
+
+
 export const Forgot = () => {
+    // Paso 1
+    // Crear un estado para el formulario
+    const [email, setEmail] = useState({
+        email: "",
+    })
 
-    const [email, setMail] = useState({})
+    const [mensaje, setMensaje] = useState({})
 
+    // Paso 2
+    // Crear una función para manejar los cambios en el formulario
     const handleChange = (e) => {
-        setMail ({
+        setEmail({
             ...email,
-            [e.farget.name]:e.target.value
+            [e.target.name]: e.target.value
         })
     }
 
-    const handleSubmit = (e) => {
+    // Paso 3
+    const handleSubnit = async (e) => {
         e.preventDefault()
         try {
             const url = "http://localhost:3000/api/recuperar-password"
-            const respuesta = axios.post(url, email)
-            console.log(respuesta)
+            const respuesta = await axios.post(url, email)
+            setMensaje({respuesta:respuesta.data.msg,tipo:true})
+            setEmail({})
         } catch (error) {
-            console.log(error)
+            setMensaje({respuesta:error.response.data.msg,tipo:false})
         }
     }
 
@@ -29,16 +41,20 @@ export const Forgot = () => {
             <div className="bg-white flex justify-center items-center w-1/2">
 
                 <div className="md:w-4/5 sm:w-full">
-
+                    {Object.keys(mensaje).length>0 && <Mensaje tipo={mensaje.tipo}>{mensaje.respuesta}</Mensaje>}
+                    
                     <h1 className="text-3xl font-semibold mb-2 text-center uppercase  text-gray-500">Forgot your password!</h1>
                     <small className="text-gray-400 block my-4 text-sm">Don't worry, please enter your details</small>
 
 
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubnit}>
 
                         <div className="mb-1">
                             <label className="mb-2 block text-sm font-semibold">Email</label>
-                            <input name= 'email' onChange= {handleChange} type="email" placeholder="Enter you email" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" />
+                            <input type="email" placeholder="Enter you email" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500"
+                            name='email'
+                            onChange={handleChange}
+                            />
                         </div>
 
                         <div className="mb-3">

@@ -1,33 +1,33 @@
 import logoDog from '../assets/dog-hand.webp'
-import {Link, useParams} from 'react-router-dom'
-import axios from 'axios'
+import { Link, useParams } from 'react-router-dom'
 import Mensaje from '../componets/Alertas/Mensaje'
-import {useEffect, useState} from 'react'
+
+import axios from 'axios'
+
+import { useEffect, useState } from 'react'
 
 export const Confirmar = () => {
 
     const {token} = useParams()
-    const {mensaje, setMensaje} = useState("")
+    const [mensaje, setMensaje] = useState("")
 
     const verificarToken = async () => {
         try {
             const url = `http://localhost:3000/api/confirmar/${token}`
             const respuesta = await axios.get(url)
-            setMensaje({respuesta:respuesta.data.msg, tipo:true})
-
+            setMensaje({respuesta:respuesta.data.msg,tipo:false})
         } catch (error) {
-            setMensaje({respuesta:error.response.data.msg, tipo:false})
+            setMensaje({respuesta:error.response.data.msg,tipo:true})
         }
     }
 
-    useEffect ( () => {
+    useEffect(() => {
         verificarToken()
     }, [])
 
-    return (
 
+    return ( 
         <div className="flex flex-col items-center justify-center">
-            
             {Object.keys(mensaje).length>0 && <Mensaje tipo={mensaje.tipo}>{mensaje.respuesta}</Mensaje>}
             <img class="object-cover h-80 w-80 rounded-full border-4 border-solid border-slate-600" src={logoDog} alt="image description"/>
 
