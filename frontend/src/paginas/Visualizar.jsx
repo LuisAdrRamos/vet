@@ -1,16 +1,21 @@
 import { useParams } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Mensaje from '../componets/Alertas/Mensaje';
-import ModalTratamiento from '../componets/Modals/ModalTratamiento.jsx'
-import TratamientosContext from '../context/TratamientosProvides.jsx';
-import TablaTratamientos from '../componets/TablaTratamientos.jsx';
+import { useNavigate } from 'react-router-dom'
+import ModalTratamiento from '../componets/Modals/ModalTratamiento';
+import { useContext} from 'react';
+import TratamientosContext from '../context/TratamientosProvides';
+import TablaTratamientos from '../componets/TablaTratamientos';
 
 const Visualizar = () => {
+
+    const {modal, handleModal, tratamientos, setTratamientos} = useContext(TratamientosContext)
+    const navigate = useNavigate()
     const { id } = useParams()
     const [paciente, setPaciente] = useState({})
     const [mensaje, setMensaje] = useState({})
-    const {modal, handleModal, tratamientos, setTratamientos} = useContext(TratamientosContext)
+
 
     const formatearFecha = (fecha) => {
         const nuevaFecha = new Date(fecha)
@@ -22,7 +27,7 @@ const Visualizar = () => {
         const consultarPaciente = async () => {
             try {
                 const token = localStorage.getItem('token')
-                const url = `http://localhost:3000/api/paciente/${id}`
+                const url = `${import.meta.env.VITE_BACKEND_URL}/paciente/${id}`
                 const options = {
                     headers: {
                         'Content-Type': 'application/json',
@@ -30,7 +35,10 @@ const Visualizar = () => {
                     }
                 }
                 const respuesta = await axios.get(url, options)
+                
                 setPaciente(respuesta.data.paciente)
+
+                setTratamientos(respuesta.data.tratamientos)
             } catch (error) {
                 setMensaje({ respuesta: error.response.data.msg, tipo: false })
             }
@@ -87,17 +95,21 @@ const Visualizar = () => {
                             </div>
                             <hr className='my-4' />
                             <div className='flex justify-between items-center'>
-                                <p>Este submódulo te permite visualizar los tratamientos del paciente</p>
+                            <p>Este submódulo te permite visualizar los tratamientos del paciente</p>
                                 <button className="px-5 py-2 bg-green-800 text-white rounded-lg hover:bg-green-700" onClick={handleModal}>Registrar</button>
-                            </div> 
+                            </div>
                             {modal && (<ModalTratamiento idPaciente={paciente._id}/>)}
-                            {/* {
+
+                            {
                                 tratamientos.length == 0 ? 
                                 <Mensaje tipo={'active'}>{'No existen registros'}</Mensaje>
                                     :
                                 <TablaTratamientos tratamientos={tratamientos}/>
-                            } */}
-                            </>
+                            }
+                            
+                            <hr className='my-4' />
+                            <button className=" text-white mr-3 text-md block hover:bg-red-900 text-center
+                             bg-gray-800 px-4 py-1 rounded-lg ml-3" onClick={() => navigate("/dashboard/listar")}>Regresar</button></>
                         )
                         :
                         (
