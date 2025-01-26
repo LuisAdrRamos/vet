@@ -8,16 +8,16 @@ import { useEffect, useState } from 'react'
 
 export const Confirmar = () => {
 
-    const {token} = useParams()
+    const { token } = useParams()
     const [mensaje, setMensaje] = useState("")
 
     const verificarToken = async () => {
         try {
             const url = `http://localhost:3000/api/confirmar/${token}`
             const respuesta = await axios.get(url)
-            setMensaje({respuesta:respuesta.data.msg,tipo:false})
+            setMensaje({ respuesta: respuesta.data.msg, tipo: true })
         } catch (error) {
-            setMensaje({respuesta:error.response.data.msg,tipo:true})
+            setMensaje({ respuesta: error.response.data.msg, tipo: true })
         }
     }
 
@@ -26,10 +26,10 @@ export const Confirmar = () => {
     }, [])
 
 
-    return ( 
+    return (
         <div className="flex flex-col items-center justify-center">
-            {Object.keys(mensaje).length>0 && <Mensaje tipo={mensaje.tipo}>{mensaje.respuesta}</Mensaje>}
-            <img class="object-cover h-80 w-80 rounded-full border-4 border-solid border-slate-600" src={logoDog} alt="image description"/>
+            {Object.keys(mensaje).length > 0 && <Mensaje tipo={mensaje.tipo}>{mensaje.respuesta}</Mensaje>}
+            <img class="object-cover h-80 w-80 rounded-full border-4 border-solid border-slate-600" src={logoDog} alt="image description" />
 
             <div className="flex flex-col items-center justify-center">
                 <p className="text-3xl md:text-4xl lg:text-5xl text-gray-800 mt-12">Muchas Gracias</p>
